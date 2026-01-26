@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List - Spring Boot Evolution</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container" style="max-width: 800px;">
+        <div class="glass-card">
+            <h1>User Registered</h1>
+            <p class="subtitle">Data retrieved via Spring Data JPA (Auto-configured)</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td style="color: var(--accent-color); font-weight: 600;" th:text="'#' + ${user.id}">#1</td>
+                        <td th:text="${user.name}">Name</td>
+                        <td th:text="${user.email}">Email</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(users)}">
+                        <td colspan="3" style="text-align: center; color: var(--text-secondary);">No users found.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 2rem;">
+                <a th:href="@{/users/form}" class="btn">Add Another User</a>
+                <a th:href="@{/}" class="btn btn-secondary">Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
