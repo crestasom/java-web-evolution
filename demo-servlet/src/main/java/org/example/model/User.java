@@ -1,6 +1,10 @@
 package org.example.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -48,4 +52,21 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		boolean isSame = super.equals(obj);
+		if (isSame) {
+			return true;
+		}
+		if (obj instanceof User) {
+			User u = (User) obj;
+			if (this.name.equalsIgnoreCase(u.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
