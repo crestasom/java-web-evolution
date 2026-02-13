@@ -16,7 +16,15 @@ public class UserDaoImpl implements UserDao {
             try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
                     Statement stmt = conn.createStatement()) {
                 stmt.execute(
-                        "CREATE TABLE IF NOT EXISTS users (id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255))");
+                        "CREATE TABLE IF NOT EXISTS users (id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), username VARCHAR(255), password VARCHAR(255), role VARCHAR(255), active BOOLEAN DEFAULT TRUE)");
+                // Seed some data
+                ResultSet rs = stmt.executeQuery("SELECT count(*) FROM users");
+                if (rs.next() && rs.getInt(1) == 0) {
+                    stmt.execute(
+                            "INSERT INTO users (name, email, username, password, role, active) VALUES ('Admin', 'admin@example.com', 'admin', 'admin123', 'ROLE_ADMIN', TRUE)");
+                    stmt.execute(
+                            "INSERT INTO users (name, email, username, password, role, active) VALUES ('User', 'user@example.com', 'user', 'user123', 'ROLE_USER', TRUE)");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,11 +37,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void save(User user) {
-        String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
+        String sql = "INSERT INTO users (name, email, username, password, role, active) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getUsername());
+            pstmt.setString(4, user.getPassword());
+            pstmt.setString(5, user.getRole());
+            pstmt.setBoolean(6, user.isActive());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,11 +63,39 @@ public class UserDaoImpl implements UserDao {
                 users.add(new User(
                         rs.getLong("id"),
                         rs.getString("name"),
-                        rs.getString("email")));
+                        rs.getString("email"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getBoolean("active")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return users;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getString("role"),
+                            rs.getBoolean("active"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

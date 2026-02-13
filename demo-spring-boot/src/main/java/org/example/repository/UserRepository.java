@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findByNameContaining(String name, Pageable pageable);
+	List<User> findByNameContaining(String name, Pageable pageable);
 
-//	@Query("from User where email=:email")
-	@Query(nativeQuery = true, value = "select *from user where user_email=:email")
+	// @Query("from User where email=:email")
+	@Query(nativeQuery = true, value = "select *from users where user_email=:email")
 	List<User> findByEmail(String email);
 
+	User findByUsername(String username);
 }

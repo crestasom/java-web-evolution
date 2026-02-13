@@ -66,5 +66,25 @@ The way Java applications interact with databases has evolved from manual connec
 
 ---
 
+## Security Evolution
+
+Spring Security (formerly Acegi Security) has evolved from complex manual filter chains to highly declarative Java configuration.
+
+| Project | Security Strategy | Configuration Location | Key Concept |
+| :--- | :--- | :--- | :--- |
+| `demo-servlet` | **Manual Integration** | `web.xml` + Java Config | Manual registration of `DelegatingFilterProxy` to bridge Servlet/Spring worlds. |
+| `demo-spring-xml` | **XML Security Namespace** | `security-config.xml` | Declarative definitions using `<security:http>` and `<security:intercept-url>`. |
+| `demo-spring-annot` | **Java Configuration** | `SecurityConfig.java` | Programmatic configuration using `SecurityFilterChain` bean. |
+| `demo-spring-boot` | **Auto-Configured Security** | `SecurityConfig.java` (+ Starters) | Default security active just by adding `spring-boot-starter-security`. |
+
+### Technical Shift
+1. **The Bridge**: In the Servlet-only world, you must manually "mount" Spring Security into the container's filter chain via `DelegatingFilterProxy`.
+2. **Namespace Power**: The XML era introduced powerful custom schemas (`<security:*>`) that condensed complex filter configurations into readable XML.
+3. **Lambda-Based Config**: Modern Spring Security (Annotations & Boot) uses a builder pattern with lambdas, making the configuration type-safe and more readable than XML.
+4. **Default-On**: Spring Boot takes a "secure by default" approach—once the starter is added, everything is locked down until you explicitly grant access.
+
+
+---
+
 ## Aesthetic Summary
 All projects in this demonstration share the same **Premium Design System** (`modern-ui.css`), proving that even "legacy" technologies like Servlets can look modern with a good UI layer. However, the ease with which these UIs are integrated varies significantly, with Spring Boot offering the most seamless experience via Thymeleaf's natural templating.

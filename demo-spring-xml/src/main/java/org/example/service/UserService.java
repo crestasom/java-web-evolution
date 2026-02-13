@@ -15,8 +15,8 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public void registerUser(String name, String email) {
-        userRepository.save(name, email);
+    public void registerUser(String name, String email, String username, String password, String role) {
+        userRepository.save(name, email, username, password, role);
     }
 
     @Transactional(readOnly = true)

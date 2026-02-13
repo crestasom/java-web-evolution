@@ -23,8 +23,10 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public String saveUser(@RequestParam String name, @RequestParam String email) {
-        userService.saveUser(new User(name, email));
+    public String saveUser(@RequestParam String name, @RequestParam String email,
+            @RequestParam String username, @RequestParam String password,
+            @RequestParam String role) {
+        userService.saveUser(new User(name, email, username, password, role));
         return "redirect:/user/list";
     }
 

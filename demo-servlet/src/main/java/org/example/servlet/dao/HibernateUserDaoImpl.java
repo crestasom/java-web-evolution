@@ -30,8 +30,8 @@ public class HibernateUserDaoImpl implements UserDao {
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
-				transaction.rollback();
-			}
+                transaction.rollback();
+            }
             e.printStackTrace();
         }
     }
@@ -39,9 +39,9 @@ public class HibernateUserDaoImpl implements UserDao {
     @Override
     public List<User> findAll() {
         try (Session session = sessionFactory.openSession()) {
-			Query<User> userQuery = session.createQuery("from User", User.class);
-			List<User> userList=userQuery.list();
-			return userList;
+            Query<User> userQuery = session.createQuery("from User", User.class);
+            List<User> userList = userQuery.list();
+            return userList;
         }
     }
 
@@ -52,6 +52,15 @@ public class HibernateUserDaoImpl implements UserDao {
             query.setFirstResult((pageNumber - 1) * pageSize);
             query.setMaxResults(pageSize);
             return query.list();
+        }
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery("from User where username = :username", User.class);
+            query.setParameter("username", username);
+            return query.uniqueResult();
         }
     }
 }

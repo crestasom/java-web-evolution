@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import org.example.model.User;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +22,10 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public String saveUser(@RequestParam String name, @RequestParam String email) {
-        userService.registerUser(name, email);
+    public String saveUser(@RequestParam String name, @RequestParam String email,
+            @RequestParam String username, @RequestParam String password,
+            @RequestParam String role) {
+        userService.registerUser(name, email, username, password, role);
         return "redirect:/user/list";
     }
 
